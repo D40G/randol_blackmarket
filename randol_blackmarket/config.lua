@@ -1,6 +1,6 @@
 Config = {}
 
-Config.Locations = {        -- Locations of where the ped spawns. Chosen randomly every night at 20:00. Add as many as you like.
+Config.Locations = {        -- Locations of where the ped spawns. Chosen randomly every night at 22:00. Add as many as you like.
     [1] = vector4(247.72, -34.56, 73.99, 30.18),
     [2] = vector4(2545.28, 2592.14, 36.96, 114.09),
     [3] = vector4(1862.15, 3856.72, 35.27, 338.39),
