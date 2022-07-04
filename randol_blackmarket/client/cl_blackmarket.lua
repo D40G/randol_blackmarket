@@ -27,6 +27,22 @@ end)
 
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     PlayerJob = QBCore.Functions.GetPlayerData().job
+	exports['qb-target']:AddBoxZone("locateguy", vector3(-1054.96, -243.53, 44.02), 1.0, 1.0, {
+            name="locateguy",
+            heading=30,
+            --debugPoly=true,
+            minZ=43.82,
+            maxZ=44.62,
+        }, {
+            options = {
+                {
+                    event = "randol_blackmarket:client:tracktheguy",
+                    icon = "fa-solid fa-location-dot",
+                    label = "Track Dealer",
+                },
+            },
+            distance = 2.5
+        })
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
