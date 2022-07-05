@@ -1,10 +1,11 @@
 local QBCore = exports['qb-core']:GetCoreObject()
-
+local PlayerJob = {}
 ------------------------------
  -- RESOURCE START/LOAD IN --
 ------------------------------
 AddEventHandler('onResourceStart', function(resourceName)
     if GetCurrentResourceName() == resourceName then
+        PlayerJob = QBCore.Functions.GetPlayerData().job
         LocateGuy()
     end
 end)
@@ -12,6 +13,11 @@ end)
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     PlayerJob = QBCore.Functions.GetPlayerData().job
     LocateGuy()
+end)
+
+RegisterNetEvent('QBCore:Client:OnJobUpdate')
+AddEventHandler('QBCore:Client:OnJobUpdate', function(JobInfo)
+    PlayerJob = JobInfo
 end)
 
 function LocateGuy()
