@@ -20,6 +20,7 @@ AddEventHandler('QBCore:Client:OnJobUpdate', function(JobInfo)
     PlayerJob = JobInfo
 end)
 
+
 function LocateGuy()
     exports['qb-target']:AddBoxZone("locateguy", vector3(-1054.96, -243.53, 44.02), 1.0, 1.0, {
         name="locateguy",
@@ -66,7 +67,7 @@ end
 
 CreateThread(function()
     while true do
-        Wait(100)
+        Wait(5)
         local hours = GetClockHours()
         if hours >= Config.Open or hours < Config.Close then
                 RequestModel(GetHashKey(Config.Model))
@@ -147,25 +148,40 @@ RegisterNetEvent("randol_blackmarket:openshop", function()
 	TriggerServerEvent("inventory:server:OpenInventory", "shop", "illegalshit", Config.Goodies)
 end)
 
+function HackingSuccess(success)
+    if success then
+        TriggerEvent('mhacking:hide')
+        findme = GetEntityCoords(marketguy)
+        SetNewWaypoint(findme.x, findme.y)
+        TrackBlip()
+        QBCore.Functions.Notify("Dealer found. Their location is now marked on your GPS", "primary", 6000)
+        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+    else
+        TriggerEvent('mhacking:hide')
+        QBCore.Functions.Notify("You failed the hack.", "error")
+        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+    end
+end
+
+
 RegisterNetEvent('randol_blackmarket:client:tracktheguy')
 AddEventHandler('randol_blackmarket:client:tracktheguy', function()
-    TriggerEvent('animations:client:EmoteCommandStart', {"type"})
-    QBCore.Functions.Progressbar("locate_guy", "Attempting to locate the dealer..", 10500, false, false, {
+    if DoesEntityExist(marketguy) then
+        TriggerEvent('animations:client:EmoteCommandStart', {"type"})
+        QBCore.Functions.Progressbar("locate_guy", "Attempting to locate the dealer..", 10500, false, false, {
             disableMovement = true,
             disableCarMovement = true,
             disableMouse = false,
             disableCombat = true,
         }, {}, {}, {}, function()
-        ClearPedTasks(PlayerPedId())
-        if DoesEntityExist(marketguy) then
-            findme = GetEntityCoords(marketguy)
-            SetNewWaypoint(findme.x, findme.y)
-            TrackBlip()
-            QBCore.Functions.Notify("Dealer found. Their location is now marked on your GPS", "primary", 6000)
-        else
-            QBCore.Functions.Notify("Unable to locate the dealer at this time. He must be sleeping.", "error", 6000)
-        end
-    end)
+        TriggerEvent('animations:client:EmoteCommandStart', {"texting"})
+        Wait(2000)
+        TriggerEvent("mhacking:show")
+	    TriggerEvent("mhacking:start", 6, 15, HackingSuccess)
+        end)
+    else
+        QBCore.Functions.Notify("It's too early to do this. Come back later.", "error")
+    end
 end)
 
 -------------------------------------------------------------------------------
